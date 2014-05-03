@@ -118,6 +118,48 @@ class MicroSD:
 		print "SD initialization passed [OK]. Card type is "+self._cardType
 		return True
 	
+	def GetCSD(self):
+		""" Receive CSD as a data block (16 bytes) """
+		if self.SendCmd([CMD9,0,0,0,0,0]) != 0: return []			# READ_CSD
+		data = []
+		if self._ReceiveDataBlock(data, 16):
+			return data
+		else:
+			return []
+	
+	def GetCID(self):
+		""" Receive CID as a data block (16 bytes) """
+		if self.SendCmd([CMD10,0,0,0,0,0]) != 0: return []			# READ_CID
+		data = []
+		if self._ReceiveDataBlock(data, 16):
+			return data
+		else:
+			return []
+	
+	def _ReceiveDataBlock(self, data, count): 
+		loop = 10;	# 10 * 10ms timeout
+		while loop > 0:
+			loop -= 1
+			answer = self._spi.xfer2([0xFF])
+			if answer[0] != 0xFF: break
+		
+		if self._verbose:
+			print "<" + self._BytesToHex(answer),
+			
+		if answer[0] != 0xFE: return False
+		
+		while count > 0:
+			data.append(self._spi.xfer2([0xFF])[0])
+			data.append(self._spi.xfer2([0xFF])[0])
+			data.append(self._spi.xfer2([0xFF])[0])
+			data.append(self._spi.xfer2([0xFF])[0])
+			count -= 4
+		
+		self._spi.xfer2([0xFF,0xFF])	# discard CRC16
+		if self._verbose:
+			print self._BytesToHex(data)
+		return True
+	
 	def SendCmd(self,cmd):
 		""" SendCmd is the primary communication function for the SD card. If an advanced
 			command is given (type ACMD), the function issues a CMD55 first. """
