@@ -3,12 +3,11 @@
 ************************************************************************
 * MicroSD.py 
 * 
-* Controller class for MicroSD cards on SPI bus (CS=0)
+* Controller class for MicroSD cards on Raspberry Pi SPI bus (CS=0)
 *
-* 04/2014, stefan.wyss@kaba.com
+* 04/2014, wyss(at)superspider(dot)net
 ************************************************************************
 """
-
 import spidev
 import time
 import RPi.GPIO as GPIO

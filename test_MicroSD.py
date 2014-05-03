@@ -3,9 +3,9 @@
 ************************************************************************
 * test_MicroSD.py 
 * 
-* Test progrm for MicroSD class
+* Test program for MicroSD class
 *
-* 04/2014, stefan.wyss@kaba.com
+* 04/2014, wyss(at)superspider(dot)net
 ************************************************************************
 """
 from MicroSD import MicroSD
